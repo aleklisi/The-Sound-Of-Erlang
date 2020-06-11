@@ -1,6 +1,8 @@
 -module(the_sound_of_erlang).
 
-%% API exports
+-define(PITCH_STANDARD, 440.0).
+-define(SAMPLE_RATE, 48000).
+
 -export([main/1]).
 
 %%====================================================================
@@ -19,15 +21,15 @@ main(_) ->
 %% Internal functions
 %%====================================================================
 
-frequency(Hz, Duration, SampleRate) ->
-    Signals = lists:seq(1, round(SampleRate * Duration)),
-    Step = Hz * 2 * math:pi() / SampleRate,
+frequency(Hz, Duration) ->
+    Signals = lists:seq(1, round(?SAMPLE_RATE * Duration)),
+    Step = Hz * 2 * math:pi() / ?SAMPLE_RATE,
     [ math:sin(Step * Signal) || Signal <- Signals ].
 
 wave() ->
     lists:flatten([
-        frequency(440, 2, 48000)
-      , frequency(500, 1, 48000)
+        frequency(440, 2)
+      , frequency(500, 1)
     ]).
 
 save(Filename, Wave) ->
@@ -38,5 +40,6 @@ save(Filename, Wave) ->
     ok = file:write_file(Filename, Content).
 
 play(Filename) ->
-    Cmd = "ffplay -f f64be -ar 48000 " ++ Filename,
+    StrRate = integer_to_list(?SAMPLE_RATE),
+    Cmd = "ffplay -f f64be -ar " ++ StrRate ++ " " ++ Filename,
     os:cmd(Cmd).
