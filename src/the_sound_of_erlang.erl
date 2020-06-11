@@ -28,8 +28,8 @@ wave() ->
        sound(SemiTone, 1) || SemiTone <- lists:seq(0, 11)
    ]).
 
-sound(Semitones, Seconds) ->
-    frequency(get_tone(Semitones), Seconds * ?BEAT_DURATION).
+sound(Semitones, Beats) ->
+    frequency(get_tone(Semitones), Beats * ?BEAT_DURATION).
 
 get_tone(Semitones) ->
     TwelfthRootOfTwo = math:pow(2, 1.0 / 12.0),
