@@ -2,7 +2,7 @@
 
 -define(PITCH_STANDARD, 440.0).
 -define(SAMPLE_RATE, 48000).
--define(BEATS_PER_MINUTE, 120).
+-define(BEATS_PER_MINUTE, 88).
 -define(BEAT_DURATION, 60 / ?BEATS_PER_MINUTE).
 
 -export([main/1]).
@@ -14,7 +14,7 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    Filename = "out/increasingNotes.raw",
+    Filename = "out/the_sound_of_Erlang.raw",
     save(Filename, Wave),
     play(Filename),
     erlang:halt(0).
@@ -25,7 +25,19 @@ main(_) ->
 
 wave() ->
    lists:flatten([
-       sound(Note, 1) || Note <- [c, d, e, f, g, a]
+        sound(f, 0.5)
+      , sound(f, 0.5)
+      , sound(a, 0.5)
+      , sound(a, 0.5)
+      , sound(g, 4)
+      , sound(c, 0.5)
+      , sound(c, 0.5)
+      , sound(c, 0.5)
+      , sound(e, 0.5)
+      , sound(e, 0.5)
+      , sound(g, 0.5)
+      , sound(g, 0.5)
+      , sound(f, 4)
 ]).
 
 note(Note) ->
