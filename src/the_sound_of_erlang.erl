@@ -2,6 +2,8 @@
 
 -define(PITCH_STANDARD, 440.0).
 -define(SAMPLE_RATE, 48000).
+-define(BEATS_PER_MINUTE, 120).
+-define(BEAT_DURATION, 60 / ?BEATS_PER_MINUTE).
 
 -export([main/1]).
 
@@ -12,7 +14,7 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    Filename = "out/2Sec440HzAnd1Sec500Hz.raw",
+    Filename = "out/increasingSemitones.raw",
     save(Filename, Wave),
     play(Filename),
     erlang:halt(0).
@@ -21,16 +23,22 @@ main(_) ->
 %% Internal functions
 %%====================================================================
 
+wave() ->
+   lists:flatten([
+       sound(SemiTone, 1) || SemiTone <- lists:seq(0, 11)
+   ]).
+
+sound(Semitones, Seconds) ->
+    frequency(get_tone(Semitones), Seconds * ?BEAT_DURATION).
+
+get_tone(Semitones) ->
+    TwelfthRootOfTwo = math:pow(2, 1.0 / 12.0),
+    ?PITCH_STANDARD * math:pow(TwelfthRootOfTwo, Semitones).
+
 frequency(Hz, Duration) ->
     Signals = lists:seq(1, round(?SAMPLE_RATE * Duration)),
     Step = Hz * 2 * math:pi() / ?SAMPLE_RATE,
     [ math:sin(Step * Signal) || Signal <- Signals ].
-
-wave() ->
-    lists:flatten([
-        frequency(440, 2)
-      , frequency(500, 1)
-    ]).
 
 save(Filename, Wave) ->
     Content = lists:foldl(
