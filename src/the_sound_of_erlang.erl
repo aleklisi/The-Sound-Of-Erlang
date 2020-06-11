@@ -14,7 +14,7 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    Filename = "out/increasingSemitones.raw",
+    Filename = "out/increasingNotes.raw",
     save(Filename, Wave),
     play(Filename),
     erlang:halt(0).
@@ -25,11 +25,22 @@ main(_) ->
 
 wave() ->
    lists:flatten([
-       sound(SemiTone, 1) || SemiTone <- lists:seq(0, 11)
-   ]).
+       sound(Note, 1) || Note <- [c, d, e, f, g, a]
+]).
 
-sound(Semitones, Beats) ->
-    frequency(get_tone(Semitones), Beats * ?BEAT_DURATION).
+note(Note) ->
+    SemitonesShift = semitones_shift(Note),
+    get_tone(SemitonesShift).
+
+semitones_shift(c) -> -9;
+semitones_shift(d) -> -8;
+semitones_shift(e) -> -7;
+semitones_shift(f) -> -4;
+semitones_shift(g) -> -1;
+semitones_shift(a) -> 0.
+
+sound(Note, Beats) ->
+    frequency(note(Note), Beats * ?BEAT_DURATION).
 
 get_tone(Semitones) ->
     TwelfthRootOfTwo = math:pow(2, 1.0 / 12.0),
