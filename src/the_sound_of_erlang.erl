@@ -49,7 +49,18 @@ get_tone(Semitones) ->
 frequency(Hz, Duration) ->
     Signals = lists:seq(1, round(?SAMPLE_RATE * Duration)),
     Step = Hz * 2 * math:pi() / ?SAMPLE_RATE,
-    [ math:sin(Step * Signal) || Signal <- Signals ].
+    RawOutput = [ math:sin(Step * Signal) || Signal <- Signals ],
+    OutputLen = length(RawOutput),
+    lists:zipwith3(
+        fun(Attack, Release, Out) -> Attack * Release * Out end,
+        attack(OutputLen), release(OutputLen), RawOutput).
+
+attack(Len) ->
+    [min(Multi / 1000, 1) || Multi <- lists:seq(1, Len)].
+
+release(Len) ->
+    lists:reverse(attack(Len)).
+
 
 save(Filename, Wave) ->
     Content = lists:foldl(
