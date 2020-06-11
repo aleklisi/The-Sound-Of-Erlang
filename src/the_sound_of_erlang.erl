@@ -10,7 +10,7 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    Filename = "out/2Sec440Hz.raw",
+    Filename = "out/2Sec440HzAnd1Sec500Hz.raw",
     save(Filename, Wave),
     play(Filename),
     erlang:halt(0).
@@ -25,7 +25,10 @@ frequency(Hz, Duration, SampleRate) ->
     [ math:sin(Step * Signal) || Signal <- Signals ].
 
 wave() ->
-    frequency(440, 2, 48000).
+    lists:flatten([
+        frequency(440, 2, 48000)
+      , frequency(500, 1, 48000)
+    ]).
 
 save(Filename, Wave) ->
     Content = lists:foldl(
