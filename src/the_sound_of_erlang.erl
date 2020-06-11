@@ -10,7 +10,7 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    Filename = "out/first_wave.raw",
+    Filename = "out/2Sec440Hz.raw",
     save(Filename, Wave),
     play(Filename),
     erlang:halt(0).
@@ -19,8 +19,13 @@ main(_) ->
 %% Internal functions
 %%====================================================================
 
+frequency(Hz, Duration, SampleRate) ->
+    Signals = lists:seq(1, round(SampleRate * Duration)),
+    Step = Hz * 2 * math:pi() / SampleRate,
+    [ math:sin(Step * Signal) || Signal <- Signals ].
+
 wave() ->
-    [math:sin(X) || X <- lists:seq(1, 48000)].
+    frequency(440, 2, 48000).
 
 save(Filename, Wave) ->
     Content = lists:foldl(
