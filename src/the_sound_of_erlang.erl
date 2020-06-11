@@ -10,7 +10,9 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    save("out/first_wave.raw", Wave),
+    Filename = "out/first_wave.raw",
+    save(Filename, Wave),
+    play(Filename),
     erlang:halt(0).
 
 %%====================================================================
@@ -26,3 +28,7 @@ save(Filename, Wave) ->
             <<Acc/binary, Elem/float>> end,
         <<"">>, Wave),
     ok = file:write_file(Filename, Content).
+
+play(Filename) ->
+    Cmd = "ffplay -f f64be -ar 48000 " ++ Filename,
+    os:cmd(Cmd).
