@@ -1,6 +1,6 @@
 # The sound of Erlang
 
-This article demonstrates how simple it is to make music.
+This article is about turning Erlang into an instrument.
 
 ## Requirements
 
@@ -163,13 +163,13 @@ We managed to generate a wave, save it to a file an play it.
 
 We can now improve our wave not to be just any random sound but a fixed frequency for a given amount of time.
 What we want to achieve is to be able to eg. play a sound of a frequency = 440 Hz for 2 seconds.
-To get a number of samples played in a given amount of time we need to multiply sample rate times sound duration, since number of samples is an integer we should then round then multiplication result.
+To get several samples played in a given amount of time we need to multiply sample rate times sound duration, since the number of samples is an integer we should then round then multiplication result.
 
 ```erlang
 NumberOfSamples = round(SampleRate * Duration)
 ```
 
-Sinus period is 2 * PI, knowing that and sample rate we can calculate how long will each signal step last for a given frequency *HZ*.
+Sinus period is 2 * PI, knowing that and sample rate we can calculate how long will each signal step last for a given frequency *Hz*.
 
 ```erlang
 Step = Hz * 2 * math:pi() / SampleRate
@@ -184,7 +184,7 @@ frequency(Hz, Duration, SampleRate) ->
     [ math:sin(Step * Signal) || Signal <- Signals ].
 ```
 
-Lets now modify a `wave/0` function to get a sound of 440 Hz played for 2 seconds with sampling rate of 48000 samples per second:
+Lets now modify a `wave/0` function to get a sound of 440 Hz played for 2 seconds with a sampling rate of 48000 samples per second:
 
 ```erlang
 wave() ->
@@ -199,8 +199,8 @@ Filename = "out/2Sec440Hz.raw",
 
 just to add it to a repository.
 You can listen to the result [here](/out/2Sec440Hz.mp3).
-So now lats play the new sound and compare it with https://youtu.be/xGXYFJmvIvk the same frequency sound from YouTube.
-For me they sound identical
+Let's play the new sound and compare it with https://youtu.be/xGXYFJmvIvk the same frequency sound from YouTube.
+For me, they sound identical.
 
 ```bash
 rebar3 escriptize && ./_build/default/bin/the_sound_of_erlang
@@ -224,16 +224,15 @@ You can listen to the result [here](/out/2Sec440HzAnd1Sec500Hz.mp3).
 
 ## Frequency to note
 
-Now we are able to play a give frequency for a given amount of time but how to make music out of that?
+We can play a given frequency for a given amount of time but how to make music out of that?
 
 From [here](https://pages.mtu.edu/~suits/notefreqs.html) we can see that the frequency of an *A4* note is `440 Hz` which is also known as **pitch standard**.
 We can also lookup all other needed notes in the same way, but there is an alternative called the frequency ratio of a semitone and it is equal to the twelfth root of two `2 ** (1 / 12)`.
 To calculate *A#4* which is 1 semitone higher than *A4* we just multiply `440 * (2 ** (1/12)) = 466.16` which after comparing to a [table](https://pages.mtu.edu/~suits/notefreqs.html) value is *A#4* corresponding frequency.
 
-Lets now try translating the maths into code:
+Let's try translating the maths into code:
 
-We can add a macro for pitch standard at the top of the file just below the module directive, Add the twel
-We can also extract sampling rate there.
+At the top of the file just below the module directive we can add a macro for pitch standard and extract the sampling rate.
 
 ```erlang
 -module(the_sound_of_erlang).
@@ -244,7 +243,7 @@ We can also extract sampling rate there.
 -export([main/1]).
 ```
 
-Now we need to use macro for sampling rate in the code.
+Now we need to use the macro for sampling rate in the code.
 Lets modify `frequency/3` to `frequency/2`:
 
 ```erlang
@@ -273,7 +272,7 @@ play(Filename) ->
     os:cmd(Cmd).
 ```
 
-Following function takes number of semitones shift and returns a shifted sound's frequency:
+Following function takes number of semitones to be shifted and returns a frequency of a shifted sound:
 
 ```erlang
 get_tone(Semitones) ->
@@ -281,23 +280,23 @@ get_tone(Semitones) ->
     ?PITCH_STANDARD * math:pow(TwelfthRootOfTwo, Semitones).
 ```
 
-We need to introduce one more concept which beats per minute which is the base unit for a note to be played. Each note is played in a given number of beats and number of beats per minute is fixed, so we can calculate how long does each beat last (in seconds) by dividing 60 by beats per minute.
+We need to introduce one more concept which beats per minute which is the base unit for a note to be played. Each note is played in a given number of beats and the number of beats per minute is fixed, so we can calculate how long does each beat last (in seconds) by dividing 60 by beats per minute.
 
-Lets now introduce new macro for that:
+Let's introduce a new macro for that:
 
 ```erlang
 -define(BEATS_PER_MINUTE, 120).
 -define(BEAT_DURATION, 60 / ?BEATS_PER_MINUTE).
 ```
 
-So now we can generate notes for a given amount of time with following function:
+We can generate notes for a given amount of time with following function:
 
 ```erlang
 sound(SemitonesShift, Beats) ->
     frequency(get_tone(SemitonesShift), Beats * ?BEAT_DURATION).
 ```
 
- Now lets try it out by providing the following wave:
+Let's try it out by providing the following wave:
 
 ```erlang
 wave() ->
@@ -306,11 +305,11 @@ wave() ->
    ]).
  ```
 
-and play it by recompiling and running a script.
+and play it by recompiling and running the script.
 I saved my output as `"out/increasingSemitones.raw"`.
 You can listen to the result [here](/out/increasingSemitones.mp3).
 I only need `[d, f, a, g, c, e]` notes to play my song, but you might need some more so feel free to extend the semitones_shift/1 function.
-Lets provide a helper function for easier sound notation:
+Let's provide a helper function for easier sound notation:
 
 ```erlang
 note(Note) ->
@@ -325,7 +324,7 @@ semitones_shift(g) -> -1;
 semitones_shift(a) -> 0.
 ```
 
-and lets modify slightly `sound/2` function as follows:
+and modify slightly the `sound/2` function as follows:
 
 ```erlang
 sound(Note, Beats) ->
@@ -347,14 +346,14 @@ You can listen to the result [here](/out/increasingNotes.mp3).
 
 ## ADSR
 
-When listening to the result there is very string tick when changing the note.
-It is because the sound increases and decreases too rapidly.
-To resolve this issue we can implement so called *ADSR* which stands for *a*ttack *d*ecay *s*ustain *r*elease and works by modifying sound amplitude (volume) according to a following chart:
+When listening to the result there is a very strange tick when changing the note.
+It is because of the sound increases and decreases too rapidly.
+To resolve this issue we can implement so-called *ADSR* which stands for *A*ttack *D*ecay *S*ustain *R*elease and works by modifying the sound amplitude (volume) according to the following chart:
 
 ![alt text](https://i.stack.imgur.com/lazZO.png)
 
-For the sake of simplicity it is enough to implement only Attack and Release parts since we already have Sustain part.
-To do it lets implement attack we will consider minimum of sequence of natural numbers divided by 1000 or 1:
+For the sake of simplicity, it is enough to implement only the Attack and Release parts since we already have the Sustain part.
+To implement the Attack, we will consider a sequence of numbers smaller or equal to 1 that will be generated in the following way:
 
 ```erlang
 attack(Len) ->
@@ -367,14 +366,15 @@ such list would be something like:
 [0.001, 0.002, ... 0.999, 1, 1, 1, ..., 1]
 ```
 
-Now lets generate release the lazy way:
+We can also generate the Release a lazy way:
 
 ```erlang
 release(Len) ->
     lists:reverse(attack(Len)).
 ```
 
-so the release function generates the following list:
+The release function generates the following list:
+
 ```erlang
 [1, 1, 1, ..., 1, 0.999, ..., 0.002, 0.001]
 ```
@@ -397,8 +397,8 @@ You can listen to the result [here](/out/increasingNotesASR.mp3).
 
 ## The sh!t just got real
 
-Now we will try to play an actual song.
-Lets modify the `wave/0` function as follows:
+Now we will try to play the actual song.
+Let's modify the `wave/0` function as follows:
 
 ```erlang
 wave() ->
@@ -421,18 +421,17 @@ wave() ->
 
 
 
-Also change beat per minute to 88. Explanation why should you do this change can be found [here](https://courses.lumenlearning.com/suny-musicappreciationtheory/chapter/introduction-to-tempo) but it it is out of scope of this article so I will not go into further details.
+Also, change the beat per minute to 88. The reasoning behind this change can be found [here](https://courses.lumenlearning.com/suny-musicappreciationtheory/chapter/introduction-to-tempo) but it is out of the scope of this article so I will not go into further details.
 
 ```erlang
 -define(BEATS_PER_MINUTE, 88).
 ```
 
-Recompile and run the script.
-You can listen to the result [here](/out/the_sound_of_Erlang.mp3).
-I save the the result to `out/the_sound_of_Erlang.raw` I hope you recognise the masterpiece I picked [Disturbed - The Sound Of Silence](https://i.pinimg.com/originals/32/89/9a/32899a5d903aa1650ca1d5ebb5dab9dd.gif) the following lines "Hello darkness, my old friend
-I've come to talk with you again" part.
+You can recompile and run the script or just listen to the result [here](/out/the_sound_of_Erlang.mp3).
+The result can be saved to `out/the_sound_of_Erlang.raw`. I hope you recognize the melody I picked [Disturbed - The Sound Of Silence](https://i.pinimg.com/originals/32/89/9a/32899a5d903aa1650ca1d5ebb5dab9dd.gif) that starts with "Hello darkness, my old friend
+I've come to talk with you again".
 
-I am looking forward to listen to your favorite song played with this tool.
+I am looking forward to listening to your favorite song played with this tool.
 
 ## Sources:
  - https://en.wikipedia.org/wiki/Frequency
