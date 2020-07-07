@@ -563,7 +563,6 @@ You can listen to the result [here](/out/the_sound_of_silence.mp3).
 I have also made attempts to play: [Star Wars the main theme](/out/star_wars_main_theme.mp3)
  and [Super Mario bros the main theme](out/super_mario_bros_main_theme.mp3).
 
-
 I am looking forward to listening to your favorite song played with this tool.
 
 ## Sources:
@@ -574,3 +573,4 @@ I am looking forward to listening to your favorite song played with this tool.
  - https://pages.mtu.edu/~suits/notefreqs.html
  - https://en.wikipedia.org/wiki/Twelfth_root_of_two
  - https://courses.lumenlearning.com/suny-musicappreciationtheory/chapter/introduction-to-tempo/
+ - https://youtu.be/FYTZkE5BZ-0
