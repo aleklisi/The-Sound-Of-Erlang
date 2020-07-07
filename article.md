@@ -312,7 +312,8 @@ wave() ->
 and play it by recompiling and running the script.
 I saved my output as `"out/increasingSemitones.raw"`.
 You can listen to the result [here](/out/increasingSemitones.mp3).
-I only need `[d, f, a, g, c, e]` notes to play my song, but you might need some more so feel free to extend the semitones_shift/1 function.
+I only need some of the notes to play my songs,
+but you might need some more so I provided them in the `semitones_shift/1` function.
 Let's provide a helper function for easier sound notation:
 
 ```erlang
@@ -320,19 +321,44 @@ note(Note) ->
     SemitonesShift = semitones_shift(Note),
     get_tone(SemitonesShift).
 
-semitones_shift(c) -> -9;
-semitones_shift(d) -> -8;
-semitones_shift(e) -> -7;
-semitones_shift(f) -> -4;
-semitones_shift(g) -> -1;
-semitones_shift(a) -> 0.
+semitones_shift(c4)         -> -9;
+semitones_shift(c4sharp)    -> -8;
+semitones_shift(d4flat)     -> -8;
+semitones_shift(d4)         -> -7;
+semitones_shift(d4sharp)    -> -6;
+semitones_shift(e4flat)     -> -6;
+semitones_shift(e4)         -> -5;
+semitones_shift(f4)         -> -4;
+semitones_shift(f4sharp)    -> -3;
+semitones_shift(g4flat)     -> -3;
+semitones_shift(g4)         -> -2;
+semitones_shift(g4sharp)    -> -1;
+semitones_shift(a4flat)     -> -1;
+semitones_shift(a4)         -> 0;
+semitones_shift(a4sharp)    -> 1;
+semitones_shift(b4flat)     -> 1;
+semitones_shift(b4)         -> 2;
+semitones_shift(c5)         -> 3;
+semitones_shift(c5sharp)    -> 4;
+semitones_shift(d5flat)     -> 4;
+semitones_shift(d5)         -> 5;
+semitones_shift(d5sharp)    -> 6;
+semitones_shift(e5flat)     -> 6;
+semitones_shift(e5)         -> 7;
+semitones_shift(f5)         -> 8;
+semitones_shift(f5sharp)    -> 9;
+semitones_shift(g5flat)     -> 9;
+semitones_shift(g5)         -> 10;
+semitones_shift(g5sharp)    -> 11;
+semitones_shift(a5flat)     -> 11;
+semitones_shift(a5)         -> 12.
 ```
 
 and modify slightly the `sound/2` function as follows:
 
 ```erlang
 sound(Note, Beats) ->
-   frequency(note(Note), Beats * ?BEAT_DURATION).
+   frequency(note(Note), Beats * beat_duration()).
 ```
 
 to use more convenient, newly created `note/1` function instead of `get_tone/1`.
@@ -341,7 +367,11 @@ Now we can try out the sounds played by modifying `wave/0` function as follow:
 ```erlang
 wave() ->
    lists:flatten([
-       sound(Note, 1) || Note <- [c, d, e, f, g, a]
+       sound(Note, 1) || Note <- [
+           c4, c4sharp, d4flat, d4, d4sharp, e4flat,
+           e4, f4, f4sharp,g4flat, g4, g4sharp,
+           a4flat, a4, a4sharp, b4flat, b4
+       ]
 ]).
 ```
 
