@@ -458,12 +458,95 @@ wave() ->
 Also, change the beat per minute to 88. The reasoning behind this change can be found [here](https://courses.lumenlearning.com/suny-musicappreciationtheory/chapter/introduction-to-tempo) but it is out of the scope of this article so I will not go into further details.
 
 ```erlang
--define(BEATS_PER_MINUTE, 88).
+beats_per_minute() -> 120.
 ```
 
 You can recompile and run the script or just listen to the result [here](/out/the_sound_of_Erlang.mp3).
 The result can be saved to `out/the_sound_of_Erlang.raw`. I hope you recognize the melody I picked [Disturbed - The Sound Of Silence](https://i.pinimg.com/originals/32/89/9a/32899a5d903aa1650ca1d5ebb5dab9dd.gif) that starts with "Hello darkness, my old friend
 I've come to talk with you again".
+
+Last but not least let's introduce an Erlang behavior for a melody.
+Create a new file `src/melody.erl` and define a melody behavior there.
+Each melody may have different beats per minute so this is the first function we need to describe a song and a second function is the notes the song consists of.
+There are 2 types to be introduced: `note()` which is one of the possible notes (aka sound frequencies) and the `duration()` which is a float saying how many beats will the sound of a given frequency last.
+
+To use a song defined in a different module with slightly simplified notation let's
+add a new macro which will store the module name in which the song is defined:
+
+```erlang
+-define(SONG, the_sound_of_silence).
+```
+
+and modify `wave/0` and `beats_per_minute/0` functions to use it:
+
+```erlang
+beats_per_minute() ->
+    ?SONG:beats_per_minute().
+
+wave() ->
+    RawSounds = ?SONG:sounds(),
+    Sounds = lists:map(
+        fun({Note, Duration}) ->
+            sound(Note, Duration)
+        end, RawSounds),
+   lists:flatten(Sounds).
+```
+
+This will not work yet as there is no `the_sound_of_silence` module defined, so
+create a file `src/songs/the_sound_of_silence.erl` and  implement the `melody` behavior:
+
+```erlang
+-module(the_sound_of_silence).
+
+-behaviour(melody).
+
+-export([sounds/0, beats_per_minute/0]).
+
+beats_per_minute() ->
+    120.
+
+sounds() ->
+    [
+        {e4, 0.5}
+    ,   {e4, 0.5}
+    ,   {g4, 0.5}
+    ,   {g4, 0.5}
+    ,   {b4, 0.5}
+    ,   {a4, 4}
+    ,   {d4, 0.5}
+    ,   {d4, 0.5}
+    ,   {d4, 0.5}
+    ,   {f4, 0.5}
+    ,   {f4, 0.5}
+    ,   {a4, 0.5}
+    ,   {a4, 0.5}
+    ,   {g4, 4}
+    ,   {g4, 0.5}
+    ,   {g4, 0.5}
+    ,   {b4, 0.5}
+    ,   {b4, 0.5}
+    ,   {d4, 0.5}
+    ,   {d4, 0.5}
+    ,   {e4, 1}
+    ,   {e4, 0.5}
+    ,   {d4, 2}
+    ,   {g4, 0.5}
+    ,   {g4, 0.5}
+    ,   {b4, 0.5}
+    ,   {b4, 0.5}
+    ,   {d4, 0.5}
+    ,   {d4, 0.5}
+    ,   {e4, 1}
+    ,   {e4, 0.5}
+    ,   {d4, 2}
+    ].
+```
+
+You can listen to the result [here](/out/the_sound_of_silence.mp3).
+
+I have also made attempts to play: [Star Wars the main theme](/out/star_wars_main_theme.mp3)
+ and [Super Mario bros the main theme](out/super_mario_bros_main_theme.mp3).
+
 
 I am looking forward to listening to your favorite song played with this tool.
 
