@@ -437,25 +437,25 @@ Let's modify the `wave/0` function as follows:
 ```erlang
 wave() ->
    lists:flatten([
-        sound(f, 0.5)
-      , sound(f, 0.5)
-      , sound(a, 0.5)
-      , sound(a, 0.5)
-      , sound(g, 4)
-      , sound(c, 0.5)
-      , sound(c, 0.5)
-      , sound(c, 0.5)
-      , sound(e, 0.5)
-      , sound(e, 0.5)
-      , sound(g, 0.5)
-      , sound(g, 0.5)
-      , sound(f, 4)
+        sound(f4, 0.5)
+      , sound(f4, 0.5)
+      , sound(a4, 0.5)
+      , sound(a4, 0.5)
+      , sound(g4, 4)
+      , sound(c4, 0.5)
+      , sound(c4, 0.5)
+      , sound(c4, 0.5)
+      , sound(e4, 0.5)
+      , sound(e4, 0.5)
+      , sound(g4, 0.5)
+      , sound(g4, 0.5)
+      , sound(f4, 4)
 ]).
 ```
 
 
 
-Also, change the beat per minute to 88. The reasoning behind this change can be found [here](https://courses.lumenlearning.com/suny-musicappreciationtheory/chapter/introduction-to-tempo) but it is out of the scope of this article so I will not go into further details.
+Also, change the beat per minute to 120. The reasoning behind setting given beats per second can be found [here](https://courses.lumenlearning.com/suny-musicappreciationtheory/chapter/introduction-to-tempo) but it is out of the scope of this article so I will not go into further details.
 
 ```erlang
 beats_per_minute() -> 120.
