@@ -297,7 +297,7 @@ We can generate notes for a given amount of time with following function:
 
 ```erlang
 sound(SemitonesShift, Beats) ->
-    frequency(get_tone(SemitonesShift), Beats * ?BEAT_DURATION).
+    frequency(get_tone(SemitonesShift), Beats * beat_duration()).
 ```
 
 Let's try it out by providing the following wave:
