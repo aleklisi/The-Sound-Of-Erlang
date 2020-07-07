@@ -280,13 +280,17 @@ get_tone(Semitones) ->
     ?PITCH_STANDARD * math:pow(TwelfthRootOfTwo, Semitones).
 ```
 
-We need to introduce one more concept which beats per minute which is the base unit for a note to be played. Each note is played in a given number of beats and the number of beats per minute is fixed, so we can calculate how long does each beat last (in seconds) by dividing 60 by beats per minute.
+We need to introduce one more concept which beats per minute which is the base time unit for a note to be played.
+Each note is played in a given number of beats and the number of beats per minute is fixed, so we can calculate how long does each beat lasts (in seconds) by dividing 60 by beats per minute.
 
-Let's introduce a new macro for that:
+Let's introduce a new function for that:
 
 ```erlang
--define(BEATS_PER_MINUTE, 120).
--define(BEAT_DURATION, 60 / ?BEATS_PER_MINUTE).
+beats_per_minute() ->
+    120.
+
+beat_duration() ->
+    60 / beats_per_minute().
 ```
 
 We can generate notes for a given amount of time with following function:
