@@ -13,6 +13,9 @@ This is a table of all used software with their versions.
 | ffplay        | 4.2.2     |
 
 ### The theory behind
+
+Before we make music with Erlang, it's worth explaining some of the basic theory behind what sound actually is, this will come in handy later.
+
 *Sound* is a vibration that propagates as an acoustic wave.
 
 *Frequency* is the number of occurrences of a repeating event per unit of time. Its basic unit is *Hz* which is the number of occurrences in one second.
@@ -27,7 +30,7 @@ where:
 
 The simplest way of generating a wave is by providing a sinus signal with the given frequency.
 
-Computers work in a discrete domain and sinus is in a continuous domain therefore *sampling* is the operation to go from continuous to the discrete domain.
+Computers work in a discrete domain while sinus works in a continuous domain; therefore, *sampling* is the operation to convert material from a continuous domain to a discrete one.
 
 *Sampling* sound is the process of converting a sound wave into a signal.
 
