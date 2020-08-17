@@ -441,18 +441,31 @@ Let's modify the `wave/0` function as follows:
 wave() ->
    lists:flatten([
         sound(f4, 0.5)
-      , sound(f4, 0.5)
-      , sound(a4, 0.5)
-      , sound(a4, 0.5)
-      , sound(g4, 4)
-      , sound(c4, 0.5)
-      , sound(c4, 0.5)
-      , sound(c4, 0.5)
-      , sound(e4, 0.5)
-      , sound(e4, 0.5)
-      , sound(g4, 0.5)
-      , sound(g4, 0.5)
-      , sound(f4, 4)
+    ,   sound(d4, 0.5)
+    ,   sound(d4, 0.5)
+    ,   sound(d4, 0.5)
+
+    ,   sound(g4, 2)
+    ,   sound(d5, 2)
+
+    ,   sound(c4, 0.5)
+    ,   sound(b4, 0.5)
+    ,   sound(a4, 0.5)
+    ,   sound(g5, 2)
+    ,   sound(d5, 1)
+
+    ,   sound(c4, 0.5)
+    ,   sound(b4, 0.5)
+    ,   sound(a4, 0.5)
+    ,   sound(g5, 2)
+    ,   sound(d5, 1)
+
+    ,   sound(c4, 0.5)
+    ,   sound(b4, 0.5)
+    ,   sound(c4, 0.5)
+    ,   sound(a4, 2)
+    ,   sound(d4, 1)
+    ,   sound(d4, 0.5)
 ]).
 ```
 
@@ -464,9 +477,9 @@ Also, change the beat per minute to 120. The reasoning behind setting given beat
 beats_per_minute() -> 120.
 ```
 
-You can recompile and run the script or just listen to the result [here](/out/the_sound_of_Erlang.mp3).
-The result can be saved to `out/the_sound_of_Erlang.raw`. I hope you recognize the melody I picked [Disturbed - The Sound Of Silence](https://i.pinimg.com/originals/32/89/9a/32899a5d903aa1650ca1d5ebb5dab9dd.gif) that starts with "Hello darkness, my old friend
-I've come to talk with you again".
+You can recompile and run the script or just listen to the result [here](/out/StarErlang.mp3).
+The result can be saved to `out/StarErlang.raw`.
+I hope you recognize the melody I picked [Star Wars (Main Theme)](https://www.musicnotes.com/images/productimages/large/mtd/MN0127456.gif).
 
 Last but not least let's introduce an Erlang behavior for a melody.
 Create a new file `src/melody.erl` and define a melody behavior there.
@@ -493,7 +506,7 @@ To use a song defined in a different module with slightly simplified notation le
 add a new macro which will store the module name in which the song is defined:
 
 ```erlang
--define(SONG, the_sound_of_silence).
+-define(SONG, star_wars_main_theme).
 ```
 
 and modify `wave/0` and `beats_per_minute/0` functions to use it:
@@ -511,11 +524,14 @@ wave() ->
    lists:flatten(Sounds).
 ```
 
-This will not work yet as there is no `the_sound_of_silence` module defined, so
-create a file `src/songs/the_sound_of_silence.erl` and  implement the `melody` behavior:
+This will not work yet as there is no `star_wars_main_theme` module defined, so
+create a file `src/songs/star_wars_main_theme.erl` and  implement the `melody` behavior:
 
 ```erlang
--module(the_sound_of_silence).
+-module(star_wars_main_theme).
+
+% Based on:
+% https://www.musicnotes.com/images/productimages/large/mtd/MN0127456.gif
 
 -behaviour(melody).
 
@@ -526,45 +542,77 @@ beats_per_minute() ->
 
 sounds() ->
     [
-        {e4, 0.5}
-    ,   {e4, 0.5}
-    ,   {g4, 0.5}
-    ,   {g4, 0.5}
+        {d4, 0.5}
+    ,   {d4, 0.5}
+    ,   {d4, 0.5}
+
+    ,   {g4, 2}
+    ,   {d5, 2}
+
+    ,   {c4, 0.5}
     ,   {b4, 0.5}
-    ,   {a4, 4}
-    ,   {d4, 0.5}
-    ,   {d4, 0.5}
-    ,   {d4, 0.5}
-    ,   {f4, 0.5}
-    ,   {f4, 0.5}
     ,   {a4, 0.5}
+    ,   {g5, 2}
+    ,   {d5, 1}
+
+    ,   {c4, 0.5}
+    ,   {b4, 0.5}
     ,   {a4, 0.5}
-    ,   {g4, 4}
-    ,   {g4, 0.5}
-    ,   {g4, 0.5}
+    ,   {g5, 2}
+    ,   {d5, 1}
+
+    ,   {c4, 0.5}
     ,   {b4, 0.5}
+    ,   {c4, 0.5}
+    ,   {a4, 2}
+    ,   {d4, 1}
+    ,   {d4, 0.5}
+
+    ,   {g4, 2}
+    ,   {d5, 2}
+
+    ,   {c4, 0.5}
     ,   {b4, 0.5}
+    ,   {a4, 0.5}
+    ,   {g5, 2}
+    ,   {d5, 1}
+
+    ,   {c4, 0.5}
+    ,   {b4, 0.5}
+    ,   {a4, 0.5}
+    ,   {g5, 2}
+    ,   {d5, 1}
+
+    ,   {c4, 0.5}
+    ,   {b4, 0.5}
+    ,   {c4, 0.5}
+    ,   {a4, 2}
+    ,   {d4, 1}
     ,   {d4, 0.5}
-    ,   {d4, 0.5}
-    ,   {e4, 1}
+
+    ,   {e4, 1.5}
     ,   {e4, 0.5}
-    ,   {d4, 2}
-    ,   {g4, 0.5}
-    ,   {g4, 0.5}
+    ,   {c4, 0.5}
     ,   {b4, 0.5}
+    ,   {a4, 0.5}
+    ,   {g4, 0.5}
+
+    ,   {g4, 0.5}
+    ,   {a4, 0.5}
     ,   {b4, 0.5}
-    ,   {d4, 0.5}
-    ,   {d4, 0.5}
-    ,   {e4, 1}
+    ,   {a4, 1}
     ,   {e4, 0.5}
-    ,   {d4, 2}
+    ,   {f4sharp, 1}
+    ,   {d4, 1}
+    ,   {d4, 0.5}
     ].
 ```
 
-You can listen to the result [here](/out/the_sound_of_silence.mp3).
+You can listen to the result [here](/out/StarErlangFull.mp3).
 
-I have also made attempts to play: [Star Wars the main theme](/out/star_wars_main_theme.mp3)
- and [Super Mario bros the main theme](out/super_mario_bros_main_theme.mp3).
+I have also made attempts to play:
+ [Super Mario bros the main theme](out/super_mario_bros_main_theme.mp3)
+ and [The Sound of Silence](out/the_sound_of_silence.mp3).
 
 I am looking forward to listening to your favorite song played with this tool.
 

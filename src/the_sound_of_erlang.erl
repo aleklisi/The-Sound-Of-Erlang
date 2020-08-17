@@ -13,7 +13,7 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    Filename = "out/the_sound_of_Erlang.raw",
+    Filename = "out/StarErlangFull.raw",
     save(Filename, Wave),
     play(Filename),
     erlang:halt(0).
