@@ -2,8 +2,7 @@
 
 -define(PITCH_STANDARD, 440.0).
 -define(SAMPLE_RATE, 48000).
--define(BEATS_PER_MINUTE, 88).
--define(BEAT_DURATION, 60 / ?BEATS_PER_MINUTE).
+-define(SONG, star_wars_main_theme).
 
 -export([main/1]).
 
@@ -14,7 +13,7 @@
 %% escript Entry point
 main(_) ->
     Wave = wave(),
-    Filename = "out/the_sound_of_Erlang.raw",
+    Filename = "out/StarErlangFull.raw",
     save(Filename, Wave),
     play(Filename),
     erlang:halt(0).
@@ -23,36 +22,58 @@ main(_) ->
 %% Internal functions
 %%====================================================================
 
+beats_per_minute() ->
+    ?SONG:beats_per_minute().
+
+beat_duration() ->
+    60 / beats_per_minute().
+
 wave() ->
-   lists:flatten([
-        sound(f, 0.5)
-      , sound(f, 0.5)
-      , sound(a, 0.5)
-      , sound(a, 0.5)
-      , sound(g, 4)
-      , sound(c, 0.5)
-      , sound(c, 0.5)
-      , sound(c, 0.5)
-      , sound(e, 0.5)
-      , sound(e, 0.5)
-      , sound(g, 0.5)
-      , sound(g, 0.5)
-      , sound(f, 4)
-]).
+    RawSounds = ?SONG:sounds(),
+    Sounds = lists:map(
+        fun({Note, Duration}) ->
+            sound(Note, Duration)
+        end, RawSounds),
+   lists:flatten(Sounds).
 
 note(Note) ->
     SemitonesShift = semitones_shift(Note),
     get_tone(SemitonesShift).
 
-semitones_shift(c) -> -9;
-semitones_shift(d) -> -8;
-semitones_shift(e) -> -7;
-semitones_shift(f) -> -4;
-semitones_shift(g) -> -1;
-semitones_shift(a) -> 0.
+semitones_shift(c4)         -> -9;
+semitones_shift(c4sharp)    -> -8;
+semitones_shift(d4flat)     -> -8;
+semitones_shift(d4)         -> -7;
+semitones_shift(d4sharp)    -> -6;
+semitones_shift(e4flat)     -> -6;
+semitones_shift(e4)         -> -5;
+semitones_shift(f4)         -> -4;
+semitones_shift(f4sharp)    -> -3;
+semitones_shift(g4flat)     -> -3;
+semitones_shift(g4)         -> -2;
+semitones_shift(g4sharp)    -> -1;
+semitones_shift(a4flat)     -> -1;
+semitones_shift(a4)         -> 0;
+semitones_shift(a4sharp)    -> 1;
+semitones_shift(b4flat)     -> 1;
+semitones_shift(b4)         -> 2;
+semitones_shift(c5)         -> 3;
+semitones_shift(c5sharp)    -> 4;
+semitones_shift(d5flat)     -> 4;
+semitones_shift(d5)         -> 5;
+semitones_shift(d5sharp)    -> 6;
+semitones_shift(e5flat)     -> 6;
+semitones_shift(e5)         -> 7;
+semitones_shift(f5)         -> 8;
+semitones_shift(f5sharp)    -> 9;
+semitones_shift(g5flat)     -> 9;
+semitones_shift(g5)         -> 10;
+semitones_shift(g5sharp)    -> 11;
+semitones_shift(a5flat)     -> 11;
+semitones_shift(a5)         -> 12.
 
 sound(Note, Beats) ->
-    frequency(note(Note), Beats * ?BEAT_DURATION).
+    frequency(note(Note), Beats * beat_duration()).
 
 get_tone(Semitones) ->
     TwelfthRootOfTwo = math:pow(2, 1.0 / 12.0),
@@ -72,7 +93,6 @@ attack(Len) ->
 
 release(Len) ->
     lists:reverse(attack(Len)).
-
 
 save(Filename, Wave) ->
     Content = lists:foldl(
